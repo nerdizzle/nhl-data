@@ -7,11 +7,13 @@ export default class NhlApiScraper {
         this._baseUrl = baseUrl;
     }
     /** */
-    async simpleRequest(url, method, responseType){
+    async simpleRequest(url, method, responseType, data){
         const xhr = new XMLHttpRequest();
         xhr.open(method, url, true);
-        xhr.responseType = responseType;
-        return await makeRequest(xhr);
+        if(responseType !== undefined || responseType!==null){
+            xhr.responseType = responseType;
+        }
+        return await makeRequest(xhr,data);
     }
     
     /** NOTE: Promise.all fails if one the requests fails. */
@@ -29,6 +31,11 @@ export default class NhlApiScraper {
         });
         return await Promise.all(requests);
     }
+    
+    async sendProspectData(data){
+       // return await simpleRequest()
+    }
+
     enrichProspectData(){
         this.getDraftData()
             .then((allDraftYears) => {
@@ -68,7 +75,13 @@ export default class NhlApiScraper {
                     return accum.concat(combined)
                 }, []);
                 console.log(finalProspectData);
-            }).catch((error) => {
+                return finalProspectData;
+            })
+            .then((data) => {
+                this.simpleRequest('')
+            })
+            .catch((error) => {
+                // send data to mongodb
                 console.log(error);
             });
     }

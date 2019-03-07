@@ -6,19 +6,20 @@ export default class MongoConnector {
     constructor(config){
         this._config = config;    
     }
-    async connect(onSuccess, onFailure) => {
+    async connect(onSuccess, onFailure) {
         try {
             const client = await MongoClient.connect(uri,{ useNewUrlParser: true });
             this.db = client.db(dbName);
             const collectionName = 'prospects';
-            
-            client.close();
+            onSuccess();
+            //client.close();
       } catch(e) {
+        onFailure();
         console.error(e)
       }
     }
 
-    async insertCollection (collectionName, data) => {
+    async insertCollection (collectionName, data) {
       return new Promise(function (resolve, reject) {
         this.db.collection(collectionName).insertMany(data, function (error, result) {
           if (error) {

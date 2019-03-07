@@ -2,7 +2,7 @@ export const makeRequest = (xhr, body) => {
     return new Promise((resolve, reject) => {
         if (xhr.withCredentials !== undefined){
             xhr.onload = () => {
-                if (xhr.status >= 200 && xhr.status < 300) {
+                if (xhr.status >= 2r00 && xhr.status < 300) {
                     resolve(xhr.response);
                 } else {
                     reject({
